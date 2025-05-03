@@ -10,3 +10,13 @@ def create_spark_session():
         .config("spark.jars.packages", "org.apache.hadoop:hadoop-aws:2.7.0") \
         .getOrCreate()
     return spark
+
+
+
+def main():
+    spark = create_spark_session()
+
+
+
+if __name__ == "__main__":
+    main()
