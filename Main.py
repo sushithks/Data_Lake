@@ -31,7 +31,8 @@ def process_song_data(spark, input_data,output_data):
     artists_table = df.select("artist_id","artist_name","artist_location","artist_latitude","artist_longitude").drop_duplicates()
 
 
-
+    # write artists table to parquet files
+    artists_table.write.parquet(output_data + "artists/", mode="overwrite")
 
 def main():
     spark = create_spark_session()
