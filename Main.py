@@ -12,7 +12,7 @@ def create_spark_session():
     return spark
 
 
-def process_song_data(spark, input_data):
+def process_song_data(spark, input_data,output_data):
 
     # get filepath to song data file
     in_data = input_data + "in_data/*/*/*/*"
@@ -22,6 +22,14 @@ def process_song_data(spark, input_data):
 
     # extract columns to create songs table
     data_table = df.select("data_id","title","artist_id","year","duration").drop_duplicates()
+
+
+    # write songs table to parquet files partitioned by year and artist
+    data_table.write.parquet(output_data + "songs/", mode="overwrite", partitionBy=["year","artist_id"])
+
+    # extract columns to create artists table
+    artists_table = df.select("artist_id","artist_name","artist_location","artist_latitude","artist_longitude").drop_duplicates()
+
 
 
 
