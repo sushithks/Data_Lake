@@ -23,19 +23,21 @@ def process_song_data(spark, input_data,output_data):
     # extract columns to create songs table
     data_table = df.select("data_id","title","artist_id","year","duration").drop_duplicates()
 
-
     # write songs table to parquet files partitioned by year and artist
     data_table.write.parquet(output_data + "songs/", mode="overwrite", partitionBy=["year","artist_id"])
 
     # extract columns to create artists table
     artists_table = df.select("artist_id","artist_name","artist_location","artist_latitude","artist_longitude").drop_duplicates()
 
-
     # write artists table to parquet files
     artists_table.write.parquet(output_data + "artists/", mode="overwrite")
 
 def main():
     spark = create_spark_session()
+    input_data = "s3://udacity-spark-project/"
+    output_data = "s3://dataeng-spark-project/songs/output/"
+
+    process_song_data(spark, input_data, output_data)
 
 
 
