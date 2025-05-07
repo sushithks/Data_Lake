@@ -39,7 +39,7 @@ def process_log_data(spark, input_data):
     log_data = os.path.join(input_data, "log-data/")
 
     # read log data file
-    df = spark.read.json(log_data, mode='PERMISSIVE', columnNameOfCorruptRecord='corrupt_record')
+    df = spark.read.json(log_data, mode='PERMISSIVE', columnNameOfCorruptRecord='corrupt_record').drop_duplicates()
 
     # filter by actions for song plays
     df = df.filter(df.page == "NextSong")
