@@ -33,7 +33,7 @@ def process_song_data(spark, input_data,output_data):
     artists_table.write.parquet(output_data + "artists/", mode="overwrite")
 
 
-def process_log_data(spark, input_data):
+def process_log_data(spark, input_data,output_data):
 
     # get filepath to log data file
     log_data = os.path.join(input_data, "log-data/")
@@ -44,6 +44,12 @@ def process_log_data(spark, input_data):
     # filter by actions for song plays
     df = df.filter(df.page == "NextSong")
 
+    # read in song data to use for songplays table
+    song_df = spark.read\
+                .format("parquet")\
+                .option("basePath", os.path.join(output_data, "songs/"))\
+                .load(os.path.join(output_data, "songs/*/*/"))
+
 
 def main():
     spark = create_spark_session()
@@ -51,7 +57,7 @@ def main():
     output_data = "s3://dataeng-spark-project/songs/output/"
 
     process_song_data(spark, input_data, output_data)
-    process_log_data(spark, input_data)
+    process_log_data(spark, input_data,output_data)
 
 
 
