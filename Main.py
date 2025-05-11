@@ -3,6 +3,7 @@ import os
 from pyspark.sql import SparkSession
 from pyspark.sql.types import *
 from pyspark.sql.functions import year, month, dayofmonth, hour, weekofyear, date_format, dayofweek
+from pyspark.sql.functions import udf, col, monotonically_increasing_id
 
 
 
@@ -62,6 +63,10 @@ def process_log_data(spark, input_data,output_data):
                 .format("parquet")\
                 .option("basePath", os.path.join(output_data, "songs/"))\
                 .load(os.path.join(output_data, "songs/*/*/"))
+
+    # extract columns from joined song and log datasets to create songplays table
+    songplays_table = df.join(song_df, df.song == song_df.title, how='inner')\
+                        .select(monotonically_increasing_id().alias("songplay_id"),col("start_time"),col("userId").alias("user_id"),"level","song_id","artist_id", col("sessionId").alias("session_id"), "location", col("userAgent").alias("user_agent"))
 
 
 def main():
