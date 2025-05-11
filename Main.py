@@ -54,6 +54,9 @@ def process_log_data(spark, input_data,output_data):
                     .withColumn("weekday",dayofweek("start_time"))\
                     .select("ts","start_time","hour", "day", "week", "month", "year", "weekday").drop_duplicates()
 
+    # write time table to parquet files partitioned by year and month
+    time_table.write.parquet(os.path.join(output_data, "time_table/"), mode='overwrite', partitionBy=["year","month"])
+
     # read in song data to use for songplays table
     song_df = spark.read\
                 .format("parquet")\
