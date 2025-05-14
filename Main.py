@@ -50,6 +50,14 @@ def process_log_data(spark, input_data,output_data):
     # extract columns for users table
     users_table = df.select("userId","firstName","lastName","gender","level").drop_duplicates()
 
+
+    # write users table to parquet files
+    users_table.write.parquet(os.path.join(output_data, "users/") , mode="overwrite")
+
+    # create timestamp column from original timestamp column
+    get_timestamp = udf(lambda x : datetime.utcfromtimestamp(int(x)/1000), TimestampType())
+
+
     time_table = df.withColumn("hour",hour("start_time"))\
                     .withColumn("day",dayofmonth("start_time"))\
                     .withColumn("week",weekofyear("start_time"))\
