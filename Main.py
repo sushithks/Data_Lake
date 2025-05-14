@@ -56,7 +56,7 @@ def process_log_data(spark, input_data,output_data):
 
     # create timestamp column from original timestamp column
     get_timestamp = udf(lambda x : datetime.utcfromtimestamp(int(x)/1000), TimestampType())
-
+    df = df.withColumn("start_time", get_timestamp("ts"))
 
     time_table = df.withColumn("hour",hour("start_time"))\
                     .withColumn("day",dayofmonth("start_time"))\
