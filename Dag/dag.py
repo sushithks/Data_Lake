@@ -2,7 +2,10 @@ from airflow import DAG
 import pandas as pd
 from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
+from airflow.operators.dummy import DummyOperator
+from Main import input_data,output_data
 
+from Main import process_song_data
 
 default_args = {
     'owner': 'airflow',
@@ -19,3 +22,4 @@ dag = DAG(
     description='Songs Data analysis',
     schedule_interval=timedelta(days=1)
 )
+
