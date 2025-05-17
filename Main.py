@@ -4,7 +4,7 @@ from pyspark.sql import SparkSession
 from pyspark.sql.types import *
 from pyspark.sql.functions import year, month, dayofmonth, hour, weekofyear, date_format, dayofweek
 from pyspark.sql.functions import udf, col, monotonically_increasing_id
-
+from config import input_data, output_data
 
 
 def create_spark_session():
@@ -87,8 +87,8 @@ def process_log_data(spark, input_data,output_data):
 
 def main():
     spark = create_spark_session()
-    input_data = "s3://udacity-spark-project/"
-    output_data = "s3://dataeng-spark-project/songs/output/"
+ #   input_data = "s3://udacity-spark-project/"
+   # output_data = "s3://dataeng-spark-project/songs/output/"
 
     process_song_data(spark, input_data, output_data)
     process_log_data(spark, input_data,output_data)
