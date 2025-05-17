@@ -23,3 +23,9 @@ dag = DAG(
     schedule_interval=timedelta(days=1)
 )
 
+
+dag_start = DummyOperator(
+    task_id='dag_start',
+    dag=dag)
+
+
