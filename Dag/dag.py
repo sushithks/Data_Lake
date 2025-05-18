@@ -29,3 +29,10 @@ dag_start = DummyOperator(
     dag=dag)
 
 
+song_data = PythonOperator(
+    task_id='song_data',
+    python_callable=process_song_data(),
+    op_kwargs={'spark':spark, 'input_data':input_data, 'output_data': output_data},
+    provide_context=True,
+    dag=dag
+)
