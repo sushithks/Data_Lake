@@ -46,3 +46,7 @@ log_data = PythonOperator(
     provide_context=True,
     dag=dag
 )
+
+dag_end = DummyOperator(
+    task_id='dag_end',
+    dag=dag)
