@@ -3,7 +3,8 @@ import pandas as pd
 from airflow.operators.python import PythonOperator
 from datetime import datetime, timedelta
 from airflow.operators.dummy import DummyOperator
-from Main import input_data,output_data,create_spark_session
+from Main import input_data, output_data, create_spark_session, process_log_data
+
 from Main import process_song_data
 
 spark = create_spark_session()
@@ -37,3 +38,15 @@ song_data = PythonOperator(
     provide_context=True,
     dag=dag
 )
+
+log_data = PythonOperator(
+    task_id='song_data',
+    python_callable=process_log_data(),
+    op_kwargs={'spark':spark, 'input_data':input_data, 'output_data': output_data},
+    provide_context=True,
+    dag=dag
+)
+
+dag_end = DummyOperator(
+    task_id='dag_end',
+    dag=dag)
