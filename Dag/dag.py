@@ -50,3 +50,7 @@ log_data = PythonOperator(
 dag_end = DummyOperator(
     task_id='dag_end',
     dag=dag)
+
+dag_start.set_downstream(song_data)
+song_data.set_downstream(log_data)
+log_data.set_downstream(dag_end)
