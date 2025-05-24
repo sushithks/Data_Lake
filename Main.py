@@ -82,6 +82,16 @@ def process_log_data(spark, input_data,output_data):
     songplays_table = songplays_table.join(time_table, songplays_table.start_time == time_table.start_time, how="inner")\
                         .select("songplay_id", songplays_table.start_time, "user_id", "level", "song_id", "artist_id", "session_id", "location", "user_agent", "year", "month")
 
+
+    data_table = df.withColumn("hour",hour("start_time"))\
+                    .withColumn("day",dayofmonth("start_time"))\
+                    .withColumn("week",weekofyear("start_time"))\
+                    .withColumn("month",month("start_time"))\
+                    .withColumn("year",year("start_time"))\
+                    .withColumn("weekday",dayofweek("start_time"))\
+                    .select("day", "week", "month", "year", "weekday").drop_duplicates()
+
+
     # write songplays table to parquet files partitioned by year and month
     songplays_table.drop_duplicates().write.parquet(os.path.join(output_data, "songplays/"), mode="overwrite", partitionBy=["year","month"])
 
